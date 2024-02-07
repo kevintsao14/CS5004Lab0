@@ -1,4 +1,8 @@
-public interface Fraction {
+/**
+ * Represents the protocol for operations that can be performed on fractions.
+ */
+public interface Fraction extends Comparable<Fraction> {
+
   /**
    * Gets the numerator of the fraction.
    *
@@ -10,7 +14,6 @@ public interface Fraction {
    * Sets the numerator of the fraction.
    *
    * @param numerator The new numerator value.
-   * @throws IllegalArgumentException If the fraction becomes invalid.
    */
   void setNumerator(int numerator);
 
@@ -22,7 +25,7 @@ public interface Fraction {
   int getDenominator();
 
   /**
-   * Sets the denominator of the fraction.
+   * Sets the denominator of the fraction ensuring it's positive.
    *
    * @param denominator The new denominator value.
    * @throws IllegalArgumentException If the denominator is not positive.
@@ -30,40 +33,33 @@ public interface Fraction {
   void setDenominator(int denominator);
 
   /**
-   * Returns the scientific value (decimal) of the fraction.
+   * Converts the fraction to its double equivalent.
    *
-   * @return The decimal value of the fraction.
+   * @return The decimal representation of the fraction.
    */
   double toDouble();
 
   /**
-   * Returns a simplified String representation of the fraction.
-   *
-   * @return The fraction as a simplified String.
-   */
-  String toString();
-
-  /**
    * Returns the reciprocal of the fraction.
    *
-   * @return The reciprocal of the fraction.
-   * @throws ArithmeticException If the numerator is zero.
+   * @return A new fraction instance representing the reciprocal.
+   * @throws ArithmeticException If the fraction's numerator is zero.
    */
   Fraction reciprocal();
 
   /**
-   * Adds another fraction to this fraction.
+   * Adds another fraction to this fraction and returns the result.
    *
-   * @param other The fraction to be added.
-   * @return The result of adding the two fractions.
+   * @param other The fraction to add to this one.
+   * @return A new fraction representing the sum.
    */
   Fraction add(Fraction other);
 
   /**
-   * Compares this fraction to another fraction.
+   * Generates a simplified string representation of the fraction.
    *
-   * @param other The fraction to compare with.
-   * @return A negative integer if (this < other), a positive integer if (this > other), and 0 otherwise.
+   * @return The string representation of the fraction in its simplest form.
    */
-  int compareTo(Fraction other);
+  @Override
+  String toString();
 }
