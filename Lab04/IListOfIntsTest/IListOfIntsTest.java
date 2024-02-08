@@ -31,8 +31,8 @@ public class IListOfIntsTest {
     IListOfInts list = new ElementNode(1, new EmptyNode());
     list = list.append(2).append(3); // Creates a list [1, 2, 3]
 
-    assertEquals("List should correctly report its size", 3, list.getCount());
-    assertEquals("Sum of the list elements should be correct", 6, list.getSum());
+    assertEquals("Size of the list", 3, list.getCount());
+    assertEquals("Sum of the list elements", 6, list.getSum());
     assertEquals("Data at index 1 should be 2", 2, list.getDataAtIndex(1));
 
     IListOfInts rest = list.getRest();
@@ -42,10 +42,10 @@ public class IListOfIntsTest {
   @Test
   public void testElementNodeInsertion() {
     IListOfInts list = new ElementNode(1, new EmptyNode()).append(3); // Starts with [1, 3]
-    list = list.insertAtIndex(2, 1); // Inserts 2 at index 1 to make the list [1, 2, 3]
+    list = list.insertAtIndex(2, 1);
 
-    assertEquals("ElementNode should allow insertion at specific index", 2, list.getDataAtIndex(1));
-    assertEquals("List should update its size after insertion", 3, list.getCount());
+    assertEquals("Insert 2 at index 1", 2, list.getDataAtIndex(1));
+    assertEquals("New size after insertion", 3, list.getCount());
   }
 
   @Test
@@ -68,19 +68,14 @@ public class IListOfIntsTest {
 
   @Test
   public void testPrependToElementNode() {
-    // Start with a single-element list
     IListOfInts list = new ElementNode(20, new EmptyNode());
 
-    // Prepend a new element
     IListOfInts result = list.prepend(10);
 
-    // Verify the data of the newly prepended element
     assertEquals("First element should be the newly prepended one", 10, result.getDataAtIndex(0));
 
-    // Verify the data of the second element, which was the original first element
     assertEquals("Second element should be the original first one", 20, result.getDataAtIndex(1));
 
-    // Verify the count of elements in the list
     assertEquals("List should have 2 elements after prepending", 2, result.getCount());
   }
 

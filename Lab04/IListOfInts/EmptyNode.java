@@ -5,7 +5,7 @@ import java.util.function.Predicate;
  */
 public class EmptyNode implements IListOfInts {
 
-  /**
+   /**
    * Prepends a given integer to this empty node, effectively creating a new list with
    * a single element.
    *
@@ -17,9 +17,8 @@ public class EmptyNode implements IListOfInts {
     return new ElementNode(data, this);
   }
 
-  /**
-   * Appends a given integer to this empty node, effectively creating a new list with
-   * a single element.
+   /**
+   * Appends a given integer to empty this empty node.
    *
    * @param data The integer data to be added to the list.
    * @return A new {@link ElementNode} containing the given data.
