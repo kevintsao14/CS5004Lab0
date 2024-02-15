@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"<Unnamed>","c":"AbstractShape","l":"AbstractShape(Point2D)","u":"%3Cinit%3E(Point2D)"},{"p":"<Unnamed>","c":"AbstractShape","l":"compareTo(Shape)"},{"p":"<Unnamed>","c":"AbstractShape","l":"distanceFromOrigin()"}];updateSearchResults();
