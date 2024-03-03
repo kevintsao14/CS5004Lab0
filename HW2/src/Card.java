@@ -2,7 +2,6 @@ import java.util.Objects;
 
 /**
  * Represents a playing card with a suit and a rank.
- * This class implements {@link Comparable} to allow for sorting cards based on their rank.
  */
 public class Card implements Comparable<Card> {
   private Suit suit;

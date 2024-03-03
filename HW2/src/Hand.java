@@ -91,7 +91,7 @@ public interface Hand<C> {
   /**
    * Converts the cards in the hand to a new type using the provided converter function.
    *
-   * @param <S>       the type of the result after conversion
+   * @param <S> the type of the result after conversion
    * @param converter the function to convert cards from type C to type S
    * @return a new hand containing the converted cards
    */
