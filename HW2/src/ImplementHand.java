@@ -145,16 +145,22 @@ public class ImplementHand<C> implements Hand<C> {
   }
 
   /**
-   * Transforms the hand into another hand of a different card type using the provided mapping function.
+   * Creates a new hand where each card has been mapped to a new type using the provided
+   * converter function. This method accounts for the reversed order of card addition
+   * by reversing the iteration order of the cards during mapping to ensure that the
+   * mapped hand retains the original order of card addition.
    *
-   * @param <R> The type of the cards in the resulting hand.
-   * @param converter The function to convert each card of type {@code C} to type {@code S}.
-   * @return A new hand containing the cards converted by {@code converter}.
+   * @param <S> the type of the mapped values
+   * @param converter a function that converts a card of type {C} to type {S}
+   * @return a new {Hand<S>} containing the mapped values, preserving the original order of addition
    */
   @Override
   public <S> Hand<S> getMap(Function<C, S> converter) {
     Hand<S> mappedHand = new ImplementHand<>();
-    for (C card : cards) {
+    List<C> reversedCards = new ArrayList<>(cards);
+    Collections.reverse(reversedCards); // Reverse the order of reversedCards to match the original addition order
+
+    for (C card : reversedCards) {
       S mappedValue = converter.apply(card);
       mappedHand.add(mappedValue);
     }

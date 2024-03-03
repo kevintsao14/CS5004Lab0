@@ -1,4 +1,5 @@
 import java.util.Comparator;
+import java.util.function.Function;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -9,11 +10,14 @@ import java.util.Map;
  * Tests for hand interface.
  */
 public class HandTest {
+
   private Hand<Card> hand;
   private Card card1, card2, card3;
+  private Function<Card, String> cardToStringMapper;
 
   @Before
   public void setUp() {
+    cardToStringMapper = card -> card.getSuit().name() + "-" + card.getRank();
     hand = new ImplementHand().emptyHand();
     card1 = new Card(Suit.CLUBS, 3);
     card2 = new Card(Suit.HEARTS, 5);
@@ -38,6 +42,7 @@ public class HandTest {
     hand.add(newCard);
     assertEquals("Hand size should be 4 after adding a card", 4, hand.getSize());
     assertTrue(hand.find(newCard) != -1);
+    assertEquals("First Card shoud be the newly added card.",newCard, hand.get(0));
   }
 
   @Test
@@ -95,6 +100,15 @@ public class HandTest {
 
   @Test
   public void testGetMap() {
-    //I dont know how to test this
+    Hand<String> stringHand = hand.getMap(cardToStringMapper);
+
+    assertNotNull("The mapped hand should not be null", stringHand);
+    assertEquals("The size of the mapped hand should be equal to the original hand", hand.getSize(),
+        stringHand.getSize());
+
+    // Verify the transformation result
+    assertEquals("The first card should be transformed correctly", "SPADES-7", stringHand.get(0));
+    assertEquals("The second card should be transformed correctly", "HEARTS-5",
+        stringHand.get(1));
   }
-  }
+}
