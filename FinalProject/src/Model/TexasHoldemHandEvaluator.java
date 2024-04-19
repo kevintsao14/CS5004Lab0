@@ -66,39 +66,71 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
   }
 
 
-  @Override
-  public Map<String, String> getPositionBasedComments() {
-    Map<String, String> adviceMap = new HashMap<>();
-    int score = calculateScore();
+//  @Override
+//  public Map<String, String> getPositionBasedComments() {
+//    Map<String, String> adviceMap = new HashMap<>();
+//    int score = calculateScore();
+//
+//    // Define the thresholds for a strong hand in each position
+//    int earlyPositionThreshold = 20;
+//    int middlePositionThreshold = 15;
+//    int latePositionThreshold = 12;
+//
+//    // Provide advice for each position and add detailed comments
+////    String earlyDecision = score > earlyPositionThreshold ? "Bet" : "Fold";
+////    String middleDecision = score > middlePositionThreshold ? "Bet" : "Fold";
+////    String lateDecision = score > latePositionThreshold ? "Bet" : "Fold";
+//
+//    String earlyDecision = decideAction(score, earlyPositionThreshold);
+//    String middleDecision = decideAction(score, middlePositionThreshold);
+//    String lateDecision = decideAction(score, latePositionThreshold);
+//
+//    String handCombination = getHandCombination();  // Get the hand combination once for all positions
+//
+//    adviceMap.put("Early", earlyDecision + " - " + generateComment("Early", earlyDecision, handCombination));
+//    adviceMap.put("Middle", middleDecision + " - " + generateComment("Middle", middleDecision, handCombination));
+//    adviceMap.put("Late", lateDecision + " - " + generateComment("Late", lateDecision, handCombination));
+//
+//    return adviceMap;
+//  }
 
-    // Define the thresholds for a strong hand in each position
+  @Override
+  public Map<String, String> getPositionDecisions(int score) {
+    Map<String, String> decisions = new HashMap<>();
     int earlyPositionThreshold = 20;
     int middlePositionThreshold = 15;
     int latePositionThreshold = 12;
 
-    // Provide advice for each position and add detailed comments
-//    String earlyDecision = score > earlyPositionThreshold ? "Bet" : "Fold";
-//    String middleDecision = score > middlePositionThreshold ? "Bet" : "Fold";
-//    String lateDecision = score > latePositionThreshold ? "Bet" : "Fold";
+    decisions.put("Early", decideAction(score, earlyPositionThreshold));
+    decisions.put("Middle", decideAction(score, middlePositionThreshold));
+    decisions.put("Late", decideAction(score, latePositionThreshold));
 
-    String earlyDecision = decideAction(score, earlyPositionThreshold);
-    String middleDecision = decideAction(score, middlePositionThreshold);
-    String lateDecision = decideAction(score, latePositionThreshold);
+    return decisions;
+  }
 
-    String handCombination = getHandCombination();  // Get the hand combination once for all positions
+  @Override
+  public Map<String, String> getPositionBasedComments() {
+    int score = calculateScore();
+    Map<String, String> decisions = getPositionDecisions(score);
+    Map<String, String> adviceMap = new HashMap<>();
+    String handCombination = getHandCombination(); // Get the hand combination once for all positions
 
-    adviceMap.put("Early", earlyDecision + " - " + generateComment("Early", earlyDecision, handCombination));
-    adviceMap.put("Middle", middleDecision + " - " + generateComment("Middle", middleDecision, handCombination));
-    adviceMap.put("Late", lateDecision + " - " + generateComment("Late", lateDecision, handCombination));
+    // Generate comments based on the decisions
+    decisions.forEach((position, decision) -> {
+      String comment = generateComment(position, decision, handCombination);
+      adviceMap.put(position, decision + " - " + comment);
+    });
 
     return adviceMap;
   }
 
 
+
+  @Override
   // Generates a comment based on the hand type, position, and betting decision
-  private String generateComment(String position, String decision, String handCombination) {
-    StringBuilder comment = new StringBuilder(handCombination);
-    comment.append(" in ").append(position).append(" position - ");
+  public String generateComment(String position, String decision, String handCombination) {
+    StringBuilder comment = new StringBuilder(position);
+    comment.append(" position. ").append("Hand Type: ").append(handCombination).append(". ");
 
     // Determine the comment based on the hand combination
     switch (handCombination) {
@@ -131,7 +163,8 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     return comment.toString();
   }
 
-  private String generateGeneralComment(String position, String decision, String rationale) {
+  @Override
+  public String generateGeneralComment(String position, String decision, String rationale) {
     String fold = "at this position, the disadvantage outweigh the strength of the hand.";
     String lateposition = "Late position gives you the advantages to observe other player's action";
 

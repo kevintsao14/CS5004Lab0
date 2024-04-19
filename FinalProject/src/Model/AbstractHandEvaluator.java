@@ -13,4 +13,8 @@ public abstract class AbstractHandEvaluator {
 
   public abstract Map<String, String> getPositionBasedComments();
   public abstract String decideAction(int score, int threshold);
+  public abstract Map<String, String> getPositionDecisions(int score);
+  public abstract String generateComment(String position, String decision, String handCombination);
+  public abstract String generateGeneralComment(String position, String decision, String rationale);
+
 }
