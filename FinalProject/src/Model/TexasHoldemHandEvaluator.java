@@ -34,7 +34,7 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     // Small Ax cards
     if (card1.getNumericValue() == 14 || card2.getNumericValue() ==14){return "Small Ax";}
 
-    return "Throw Away";
+    return "Bad Hand";
   }
 
   @Override
@@ -64,35 +64,6 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
   public String decideAction(int score, int threshold) {
     return score > threshold ? "Bet" : "Fold";
   }
-
-
-//  @Override
-//  public Map<String, String> getPositionBasedComments() {
-//    Map<String, String> adviceMap = new HashMap<>();
-//    int score = calculateScore();
-//
-//    // Define the thresholds for a strong hand in each position
-//    int earlyPositionThreshold = 20;
-//    int middlePositionThreshold = 15;
-//    int latePositionThreshold = 12;
-//
-//    // Provide advice for each position and add detailed comments
-////    String earlyDecision = score > earlyPositionThreshold ? "Bet" : "Fold";
-////    String middleDecision = score > middlePositionThreshold ? "Bet" : "Fold";
-////    String lateDecision = score > latePositionThreshold ? "Bet" : "Fold";
-//
-//    String earlyDecision = decideAction(score, earlyPositionThreshold);
-//    String middleDecision = decideAction(score, middlePositionThreshold);
-//    String lateDecision = decideAction(score, latePositionThreshold);
-//
-//    String handCombination = getHandCombination();  // Get the hand combination once for all positions
-//
-//    adviceMap.put("Early", earlyDecision + " - " + generateComment("Early", earlyDecision, handCombination));
-//    adviceMap.put("Middle", middleDecision + " - " + generateComment("Middle", middleDecision, handCombination));
-//    adviceMap.put("Late", lateDecision + " - " + generateComment("Late", lateDecision, handCombination));
-//
-//    return adviceMap;
-//  }
 
   @Override
   public Map<String, String> getPositionDecisions(int score) {
@@ -124,8 +95,6 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     return adviceMap;
   }
 
-
-
   @Override
   // Generates a comment based on the hand type, position, and betting decision
   public String generateComment(String position, String decision, String handCombination) {
@@ -153,7 +122,7 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
         comment.append(generateSuitedCardsComment(position, decision));
         break;
       case "Bad Hand":
-        comment.append(generateThrowAwayComment(position, decision));
+        comment.append(generateBadHandComment(position, decision));
         break;
       default:
         logUnexpectedHandType(handCombination); // This method needs to be implemented to log errors
@@ -180,7 +149,7 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
       case "Late":
         return decision.equals("Fold")
             ? lateposition + rationale + "However, the risk is not manageble in this scenario."
-            : lateposition + "So you can play wider range of hands";
+            : lateposition + " So you can play wider range of hands.";
       default:
         logUnexpectedPosition(position);
         return "Unexpected position. Play cautiously.";
@@ -221,7 +190,7 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     return generateGeneralComment(position, decision, rationale);
   }
 
-  private String generateThrowAwayComment(String position, String decision) {
+  private String generateBadHandComment(String position, String decision) {
     String rationale =
         "This combination is trash, don't play it. One still could hit backdoor two pair tho. ";
     return generateGeneralComment(position, decision, rationale);
