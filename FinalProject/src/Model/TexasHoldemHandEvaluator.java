@@ -61,6 +61,11 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     return score;
   }
 
+  public String decideAction(int score, int threshold) {
+    return score > threshold ? "Bet" : "Fold";
+  }
+
+
   @Override
   public Map<String, String> getPositionBasedComments() {
     Map<String, String> adviceMap = new HashMap<>();
@@ -72,9 +77,13 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     int latePositionThreshold = 12;
 
     // Provide advice for each position and add detailed comments
-    String earlyDecision = score > earlyPositionThreshold ? "Bet" : "Fold";
-    String middleDecision = score > middlePositionThreshold ? "Bet" : "Fold";
-    String lateDecision = score > latePositionThreshold ? "Bet" : "Fold";
+//    String earlyDecision = score > earlyPositionThreshold ? "Bet" : "Fold";
+//    String middleDecision = score > middlePositionThreshold ? "Bet" : "Fold";
+//    String lateDecision = score > latePositionThreshold ? "Bet" : "Fold";
+
+    String earlyDecision = decideAction(score, earlyPositionThreshold);
+    String middleDecision = decideAction(score, middlePositionThreshold);
+    String lateDecision = decideAction(score, latePositionThreshold);
 
     String handCombination = getHandCombination();  // Get the hand combination once for all positions
 

@@ -12,5 +12,5 @@ public abstract class AbstractHandEvaluator {
   public abstract int calculateScore();
 
   public abstract Map<String, String> getPositionBasedComments();
-
+  public abstract String decideAction(int score, int threshold);
 }
