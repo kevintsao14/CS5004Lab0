@@ -135,33 +135,33 @@ public class TexasHoldemHandEvaluatorTest {
     // Generate position based comments for a high-scoring hand
     Map<String, String> comments = evaluator.getPositionBasedComments();
     assertEquals("Early position advice should include Bet", "Bet - Early position. "
-        + "Hand Type: Suited Connector. Betting early since A suited connector has many potential after flop, "
+        + "Betting early since A suited connector has many potential after flop, "
         + "thus making it a very playable hand. ", comments.get("Early"));
     assertEquals("Middle position advice should include Bet", "Bet - Middle position. "
-        + "Hand Type: Suited Connector. A suited connector has many potential after flop, thus making "
+        + "A suited connector has many potential after flop, thus making "
         + "it a very playable hand. Middle position gives you some edge aginst players at early position.",
         comments.get("Middle"));
     assertEquals("Late position advice should include Bet", "Bet - Late position. "
-        + "Hand Type: Suited Connector. Late position gives you the advantages to observe other "
+        + "Late position gives you the advantages to observe other "
         + "player's action So you can play wider range of hands.", comments.get("Late"));
 
     Map<String, String> comments2 = evaluator3.getPositionBasedComments();
     assertEquals("Early position advice should include Fold","Fold - Early position. "
-        + "Hand Type: Two High Cards. Two high cards have limited potential but still have decent "
+        + "Two high cards have limited potential but still have decent "
         + "value when hit a pair after flop. However, at this position, the disadvantage outweigh "
         + "the strength of the hand.", comments2.get("Early"));
     assertEquals("Middle position advice should include Bet", "Bet - Middle position. "
-        + "Hand Type: Two High Cards. Two high cards have limited potential but still have decent "
+        + "Two high cards have limited potential but still have decent "
         + "value when hit a pair after flop. Middle position gives you some edge aginst players at "
         + "early position.", comments2.get("Middle"));
     assertEquals("Late position advice should include Bet","Bet - Late position. "
-        + "Hand Type: Two High Cards. Late position gives you the advantages to observe other "
+        + "Late position gives you the advantages to observe other "
         + "player's action So you can play wider range of hands.", comments2.get("Late"));
 
     // Changing to a low-scoring hand (7-2 offsuit)
     Map<String, String> comments3 = evaluator7.getPositionBasedComments();
     assertEquals("Early position advice should include Fold", "Fold - Early position. "
-        + "Hand Type: Bad Hand. This combination is trash, don't play it. One still could hit backdoor "
+        + "This combination is trash, don't play it. One still could hit backdoor "
         + "two pair tho. However, at this position, the disadvantage outweigh the strength of the hand.",
         comments3.get("Early"));
   }

@@ -99,7 +99,7 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
   // Generates a comment based on the hand type, position, and betting decision
   public String generateComment(String position, String decision, String handCombination) {
     StringBuilder comment = new StringBuilder(position);
-    comment.append(" position. ").append("Hand Type: ").append(handCombination).append(". ");
+    comment.append(" position. ");
 
     // Determine the comment based on the hand combination
     switch (handCombination) {
