@@ -1,3 +1,5 @@
+
+
 import java.util.Map;
 
 public interface IHand {
@@ -5,4 +7,6 @@ public interface IHand {
 //  public void finalizeHand();
   String describeHand(); // Returns a string description of the hand
   String getHandCombination();
+  Map<String, String> getHandPositionDecisions();
+  Map<String, String> getHandPositionBasedComments();
 }

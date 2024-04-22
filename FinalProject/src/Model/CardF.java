@@ -1,3 +1,4 @@
+
 public class CardF implements ICard {
   public final String value; // Use a String to include numbers and face cards like "J", "Q", "K", "A"
   public final String suit; // "Spades", "Hearts", "Clubs", "Diamonds"
