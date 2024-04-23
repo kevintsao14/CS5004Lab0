@@ -72,9 +72,9 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     int middlePositionThreshold = 15;
     int latePositionThreshold = 12;
 
-    decisions.put("Early", decideAction(score, earlyPositionThreshold));
-    decisions.put("Middle", decideAction(score, middlePositionThreshold));
-    decisions.put("Late", decideAction(score, latePositionThreshold));
+    decisions.put("Late Position", decideAction(score, latePositionThreshold));
+    decisions.put("Middle Position", decideAction(score, middlePositionThreshold));
+    decisions.put("Early Position", decideAction(score, earlyPositionThreshold));
 
     return decisions;
   }
@@ -89,7 +89,7 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     // Generate comments based on the decisions
     decisions.forEach((position, decision) -> {
       String comment = generateComment(position, decision, handCombination);
-      adviceMap.put(position, decision + " - " + comment);
+      adviceMap.put(position, decision + " \n" + comment + "\n");
     });
 
     return adviceMap;
@@ -98,8 +98,8 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
   @Override
   // Generates a comment based on the hand type, position, and betting decision
   public String generateComment(String position, String decision, String handCombination) {
-    StringBuilder comment = new StringBuilder(position);
-    comment.append(" position. ");
+    StringBuilder comment = new StringBuilder();
+//    comment.append(" position. ");
 
     // Determine the comment based on the hand combination
     switch (handCombination) {
@@ -138,15 +138,15 @@ public class TexasHoldemHandEvaluator extends AbstractHandEvaluator {
     String lateposition = "Late position gives you the advantages to observe other player's action";
 
     switch (position) {
-      case "Early":
+      case "Early Position":
         return decision.equals("Fold")
             ? rationale + "However, " + fold
             : "Betting early since " + rationale;
-      case "Middle":
+      case "Middle Position":
         return decision.equals("Fold")
             ? rationale + "But, " + fold
             : rationale + "Middle position gives you some edge aginst players at early position.";
-      case "Late":
+      case "Late Position":
         return decision.equals("Fold")
             ? lateposition + rationale + "However, the risk is not manageble in this scenario."
             : lateposition + " So you can play wider range of hands.";

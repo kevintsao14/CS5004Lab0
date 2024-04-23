@@ -95,7 +95,7 @@ public class HoldemView extends JFrame {
   private JTextField card2ValueTextField = new JTextField(3);
   private JTextField card2SuitTextField = new JTextField(3);
   private JButton submitButton = new JButton("Evaluate Hand");
-  private JTextArea resultArea = new JTextArea(20, 30);  // Adjusted size for better visibility
+  private JTextArea resultArea = new JTextArea(20, 100);  // Adjusted size for better visibility
 
   public HoldemView() {
     // Setup the GUI components
@@ -144,27 +144,44 @@ public class HoldemView extends JFrame {
     return card2SuitTextField.getText().trim().toUpperCase();
   }
 
-  public void displayResults(String result) {
-    resultArea.setText(result);
-  }
-
   public void displayError(String message) {
     JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
   }
 
-  public void displayComments(Map<String, String> comments) {
-    StringBuilder commentsText = new StringBuilder("Comments:\n");
-    for (Map.Entry<String, String> entry : comments.entrySet()) {
-      commentsText.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+  public void updateTextArea(String title, Map<String, String> dataMap) {
+    StringBuilder stringBuilder = new StringBuilder(resultArea.getText());
+    stringBuilder.append(title).append(":\n");
+    for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+      stringBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
     }
-    resultArea.setText(commentsText.toString());
+    stringBuilder.append("\n");
+    resultArea.setText(stringBuilder.toString());
+  }
+
+  public void formatHandInformation(String handInfo) {
+    SwingUtilities.invokeLater(() -> resultArea.setText(handInfo));
+  }
+
+  // In HoldemView class
+
+  public void displayHandInformation(String handInfo) {
+    resultArea.append(handInfo + "\n\n");
   }
 
   public void displayDecisions(Map<String, String> decisions) {
-    StringBuilder decisionsText = new StringBuilder("Decisions:\n");
+    resultArea.append("Decisions:\n");
     for (Map.Entry<String, String> entry : decisions.entrySet()) {
-      decisionsText.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+      resultArea.append(entry.getKey() + ": " + entry.getValue() + "\n");
     }
-    resultArea.setText(decisionsText.toString());
+    resultArea.append("\n");
   }
+
+  public void displayComments(Map<String, String> comments) {
+    resultArea.append("Comments:\n");
+    for (Map.Entry<String, String> entry : comments.entrySet()) {
+      resultArea.append(entry.getKey() + ": " + entry.getValue() + "\n");
+    }
+    resultArea.append("\n");
+  }
+
 }

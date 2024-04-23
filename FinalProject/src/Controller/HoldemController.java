@@ -1,13 +1,17 @@
+import java.util.Collections;
 import java.util.Map;
 
 //package controller;
 public class HoldemController {
+
   private HoldemModel model;  // This would encapsulate HandF and evaluator logic
   private view.HoldemView view;
+  private HandInfoDisplayFormat handInfo;
 
   public HoldemController(HoldemModel model, view.HoldemView view) {
     this.model = model;
     this.view = view;
+    this.handInfo = new HandInfoDisplayFormat();
     initController();
   }
 
@@ -21,19 +25,20 @@ public class HoldemController {
       String card1Suit = view.getFirstCardSuit();
       String card2Value = view.getSecondCardValue();
       String card2Suit = view.getSecondCardSuit();
-      HandF hand = model.createHand(card1Value, card1Suit, card2Value, card2Suit); // Model handles creation and evaluation
-      String results = hand.describeHand();
-      view.displayResults(results);
+      HandF hand = model.createHand(card1Value, card1Suit, card2Value, card2Suit);
 
-      // Get position-based decisions and comments
-      Map<String, String> decisions = model.getPositionDecisions();
-      Map<String, String> comments = model.getPositionBasedComments();
+      // Use the HandInfoDisplayFormat to format the display string
+      String formattedHandInfo = handInfo.formatHandInformation(hand);
 
-      // Assuming you have methods in your view to display these maps
-      view.displayDecisions(decisions);
-      view.displayComments(comments);
+      // Display hand information, decisions, and comments
+      view.displayHandInformation(formattedHandInfo);
+      view.displayDecisions(model.getPositionDecisions());
+      view.displayComments(model.getPositionBasedComments());
+
     } catch (IllegalArgumentException e) {
       view.displayError("Invalid Input: " + e.getMessage());
     }
   }
+
 }
+
