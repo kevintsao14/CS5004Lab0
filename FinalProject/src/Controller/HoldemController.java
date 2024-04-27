@@ -19,7 +19,7 @@ public class HoldemController {
     view.getSubmitButton().addActionListener(e -> evaluateHand());
   }
 
-  private void evaluateHand() {
+  public void evaluateHand() {
     try {
       String card1Value = view.getFirstCardValue();
       String card1Suit = view.getFirstCardSuit();
