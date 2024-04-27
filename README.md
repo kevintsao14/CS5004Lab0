@@ -14,6 +14,7 @@ a game.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
+- [Resources](#Resources)
 
 
 
@@ -49,3 +50,10 @@ Positional Advice: Provides strategic recommendations based on the player's posi
 with adjustments according to hand strength and game dynamics.
 
 
+## Resources
+
+Jac241. Java-MVC-Blackjack. GitHub, 2024, github.com/jac241/Java-MVC-Blackjack.
+
+Olson, Kevin. "Console Blackjack in Java (21)." Kevin's Guides, 22 Oct. 2023, kevinsguides.com/guides/code/java/javaprojs/consoleblackjack.
+
+Phstc. Java SE Implementation for Texas Hold'em Poker. GitHub, 2024, github.com/phstc/javapokertexasholdem.
