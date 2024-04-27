@@ -1,4 +1,3 @@
-
 public interface ICard {
   String getValue();
   String getSuit();

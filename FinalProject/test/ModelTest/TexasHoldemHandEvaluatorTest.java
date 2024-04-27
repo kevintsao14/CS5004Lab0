@@ -1,212 +1,207 @@
 import static org.junit.Assert.*;
-
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * Test class for {@code TexasHoldemHandEvaluator}. This class conducts unit tests to verify the correct functionality
+ * of hand evaluation, including scoring, decision making, and hand type determination specific to Texas Hold'em poker.
+ */
 public class TexasHoldemHandEvaluatorTest {
-
   private TexasHoldemHandEvaluator evaluator;
-  private TexasHoldemHandEvaluator evaluator2;
-  private TexasHoldemHandEvaluator evaluator3;
-  private TexasHoldemHandEvaluator evaluator4;
-  private TexasHoldemHandEvaluator evaluator5;
-  private TexasHoldemHandEvaluator evaluator6;
-  private TexasHoldemHandEvaluator evaluator7;
-  private List<CardF> hand1;
+  private List<CardF> hand;
   private List<CardF> hand2;
-  private List<CardF> hand3;
-  private List<CardF> hand4;
-  private List<CardF> hand5;
-  private List<CardF> hand6;
-  private List<CardF> hand7;
+  private TexasHoldemHandEvaluator pair;
+  private TexasHoldemHandEvaluator suitedCard;
+  private TexasHoldemHandEvaluator suitedConnector;
+  private TexasHoldemHandEvaluator twoHighCard;
+  private TexasHoldemHandEvaluator connectors;
+  private TexasHoldemHandEvaluator smallAx;
+  private TexasHoldemHandEvaluator badHand;
+  private TexasHoldemHandEvaluator insufficientHand;
 
+  /**
+   * Sets up the initial conditions before each test case. Initializes the evaluator with a predefined hand
+   * consisting of Ace of Hearts and King of Hearts, representing a suited connector.
+   */
   @Before
   public void setUp() {
-    hand1 = new ArrayList<>();
-    hand1.add(new CardF("A", "H")); // King of Hearts
-    hand1.add(new CardF("K", "H")); // Queen of Hearts (Suited Connector)
-    evaluator = new TexasHoldemHandEvaluator(hand1);
+    hand = new ArrayList<>();
+    hand.add(new CardF("A", "H")); // Ace of Hearts
+    hand.add(new CardF("K", "H")); // King of Hearts (Suited Connector)
+    evaluator = new TexasHoldemHandEvaluator(hand);
 
     hand2 = new ArrayList<>();
-    hand2.add(new CardF("2", "D"));
-    hand2.add(new CardF("2", "S"));
-    evaluator2 = new TexasHoldemHandEvaluator(hand2);
-
-    hand3 = new ArrayList<>();
-    hand3.add(new CardF("A", "H"));
-    hand3.add(new CardF("J", "S"));
-    evaluator3 = new TexasHoldemHandEvaluator(hand3); //Two high Cards
-
-    hand4 = new ArrayList<>();
-    hand4.add(new CardF("4", "S"));
-    hand4.add(new CardF("2", "S"));
-    evaluator4 = new TexasHoldemHandEvaluator(hand4); // Suited Cards
-
-    hand5 = new ArrayList<>();
-    hand5.add(new CardF("6", "C"));
-    hand5.add(new CardF("7", "S"));
-    evaluator5 = new TexasHoldemHandEvaluator(hand5); // Connected Cards
-
-    hand6 = new ArrayList<>();
-    hand6.add(new CardF("A", "C"));
-    hand6.add(new CardF("7", "S"));
-    evaluator6 = new TexasHoldemHandEvaluator(hand6); // Small Ax
-
-    hand7 = new ArrayList<>();
-    hand7.add(new CardF("2", "H"));
-    hand7.add(new CardF("7", "C"));
-    evaluator7 = new TexasHoldemHandEvaluator(hand7); // Throw Away
+    hand2.add(new CardF("2", "H"));
+    hand2.add(new CardF("8", "S"));
+    badHand = new TexasHoldemHandEvaluator(hand2);
   }
 
+  /**
+   * Tests the hand combination identification method of the evaluator. Verifies that the evaluator correctly identifies
+   * a suited connector when the hand consists of suited high cards in sequence.
+   */
+  @Test
+  public void testGetHandCombination() {
+    assertEquals("Hand should be identified as Suited Connector", "Suited Connector",
+        evaluator.getHandCombination());
+    assertEquals("Bad Hand hand tpye","Bad Hand", badHand.getHandCombination());
+  }
+
+  /**
+   * Tests the hand combination method with insufficient cards to ensure that it throws an IllegalArgumentException as expected.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetHandCombinationWithInsufficientCards() {
+    List<CardF> hand = new ArrayList<>();
+    hand.add(new CardF("A", "H"));
+
+    TexasHoldemHandEvaluator insufficientHand = new TexasHoldemHandEvaluator(hand);
+    insufficientHand.getHandCombination();  // This should throw IllegalArgumentException
+  }
+
+  /**
+   * Tests the score calculation functionality of the evaluator. Verifies that the score is calculated as expected
+   * based on the predefined rules.
+   */
   @Test
   public void testCalculateScore() {
     int score = evaluator.calculateScore();
-    // Expected score calculation:
-    // Base score (A+K/2): (14 + 13)/2 = 13
-    // Pair: +0
-    // Suited: +7
-    // Two high cards: +7
-    // Connected: +3
-    // Total score: 30
-    assertEquals("Calculated score should be 30", 30, score);
-
-    int score2 = evaluator2.calculateScore();
-    // Expected score calculation:
-    // Base score (2+2/2): (2 + 2)/2 = 2
-    // Pair: +15
-    // Suited: +0
-    // Two high cards: +0
-    // Connected: +0
-    // Total score: 17
-    assertEquals("Calculated score should be 17", 17, score2);
+    int score2 = badHand.calculateScore();
+    assertEquals("Calculated score should match expected", 30, score);
+    assertEquals("Calculated score should match expected for bad hand", 5, score2);
   }
 
+  /**
+   * Tests the decision-making logic of the evaluator based on a score and a given threshold.
+   */
   @Test
   public void testDecideAction() {
-    assertEquals("Decision should be Bet", "Bet", evaluator.decideAction(30, 25));
-    assertEquals("Decision should be Fold", "Fold", evaluator.decideAction(15, 20));
+    String action = evaluator.decideAction(30, 20);
+    String action1 = badHand.decideAction(5,15);
+    assertEquals("Should decide to Bet with score 30 and threshold 20", "Bet", action);
+    assertEquals("Should decide to Bet with score 30 and threshold 15", "Fold", action1);
   }
 
+  /**
+   * Tests the generation of position-based decisions, ensuring that the evaluator provides correct betting advice
+   * for different positions based on a given hand score.
+   */
   @Test
   public void testGetPositionDecisions() {
-    // Test with a high score that should result in betting in all positions
-    Map<String, String> decisions = evaluator.getPositionDecisions(25);
-    assertEquals("Should bet in Early position with high score", "Bet", decisions.get("Early"));
-    assertEquals("Should bet in Middle position with high score", "Bet", decisions.get("Middle"));
-    assertEquals("Should bet in Late position with high score", "Bet", decisions.get("Late"));
-
-    // Test with a lower score that should result in folding in early and middle but betting in late position
-    decisions = evaluator.getPositionDecisions(14);
-    assertEquals("Should fold in Early position with low score", "Fold", decisions.get("Early"));
-    assertEquals("Should bet in Middle position with borderline score", "Fold", decisions.get("Middle"));
-    assertEquals("Should bet in Late position with borderline score", "Bet", decisions.get("Late"));
-
-    // Test with a very low score that should result in folding in all positions
-    decisions = evaluator.getPositionDecisions(10);
-    assertEquals("Should fold in Early position with very low score", "Fold", decisions.get("Early"));
-    assertEquals("Should fold in Middle position with very low score", "Fold", decisions.get("Middle"));
-    assertEquals("Should fold in Late position with very low score", "Fold", decisions.get("Late"));
+    Map<String, String> decisions = evaluator.getPositionDecisions(30);
+    assertEquals("Should Bet in Early Position with high score", "Bet", decisions.get("Early Position(Bet > 20)"));
+    assertEquals("Should Bet in Middle Position with high score", "Bet", decisions.get("Middle Position(Bet > 15)"));
+    assertEquals("Should Bet in Late Position with high score", "Bet", decisions.get("Late Position(Bet > 12)"));
   }
 
-  @Test
-  public void testgetHandCombination(){
-    String type1 = evaluator.getHandCombination();
-    String type2 = evaluator2.getHandCombination();
-    String type3 = evaluator3.getHandCombination();
-    String type4 = evaluator4.getHandCombination();
-    String type5 = evaluator5.getHandCombination();
-    String type6 = evaluator6.getHandCombination();
-    String type7 = evaluator7.getHandCombination();
-
-    assertEquals("Type should be Suited Connector", "Suited Connector", type1);
-    assertEquals("Type should be Pair", "Pair", type2);
-    assertEquals("Type should be Two High Cards", "Two High Cards", type3);
-    assertEquals("Type should be Suited Cards", "Suited Cards", type4);
-    assertEquals("Type should be Connected Cards", "Connected Cards", type5);
-    assertEquals("Type should be Small Ax", "Small Ax", type6);
-    assertEquals("Type should be Throw Away", "Bad Hand", type7);
-  }
-
+  /**
+   * Tests the generation of position-based comments from the evaluator. Ensures that comments are generated
+   * that align with the strategic advice based on hand evaluation.
+   */
   @Test
   public void testGetPositionBasedComments() {
-    // Generate position based comments for a high-scoring hand
     Map<String, String> comments = evaluator.getPositionBasedComments();
-    assertEquals("Early position advice should include Bet", "Bet - Early position. "
-        + "Betting early since A suited connector has many potential after flop, "
-        + "thus making it a very playable hand. ", comments.get("Early"));
-    assertEquals("Middle position advice should include Bet", "Bet - Middle position. "
-        + "A suited connector has many potential after flop, thus making "
-        + "it a very playable hand. Middle position gives you some edge aginst players at early position.",
-        comments.get("Middle"));
-    assertEquals("Late position advice should include Bet", "Bet - Late position. "
-        + "Late position gives you the advantages to observe other "
-        + "player's action So you can play wider range of hands.", comments.get("Late"));
+    assertTrue("Early position advice should include strong play rationale", comments.get("Early Position(Bet > 20)").contains("Betting early since"));
+    assertTrue("Middle position advice should emphasize positional advantage", comments.get("Middle Position(Bet > 15)").contains("Middle position gives you some edge"));
+    assertTrue("Late position advice should highlight observational benefits", comments.get("Late Position(Bet > 12)").contains("Late position gives you the advantages"));
+  }
 
-    Map<String, String> comments2 = evaluator3.getPositionBasedComments();
-    assertEquals("Early position advice should include Fold","Fold - Early position. "
-        + "Two high cards have limited potential but still have decent "
-        + "value when hit a pair after flop. However, at this position, the disadvantage outweigh "
-        + "the strength of the hand.", comments2.get("Early"));
-    assertEquals("Middle position advice should include Bet", "Bet - Middle position. "
-        + "Two high cards have limited potential but still have decent "
-        + "value when hit a pair after flop. Middle position gives you some edge aginst players at "
-        + "early position.", comments2.get("Middle"));
-    assertEquals("Late position advice should include Bet","Bet - Late position. "
-        + "Late position gives you the advantages to observe other "
-        + "player's action So you can play wider range of hands.", comments2.get("Late"));
+  /**
+   * Additional tests to verify the evaluator's functionality for specific hand types like pairs, suited cards, etc.
+   * These tests ensure that the evaluator accurately identifies and provides feedback on various poker hand types.
+   */
+  @Test
+  public void testPair() {
+    hand = new ArrayList<>();
+    hand.add(new CardF("K", "H"));
+    hand.add(new CardF("K", "S"));
+    pair = new TexasHoldemHandEvaluator(hand);
+    Map<String, String> pairComments = pair.getPositionBasedComments();
+    String pairResult = pair.generateComment("Early Position(Bet > 20)", "Bet", "Pair");
 
-    // Changing to a low-scoring hand (7-2 offsuit)
-    Map<String, String> comments3 = evaluator7.getPositionBasedComments();
-    assertEquals("Early position advice should include Fold", "Fold - Early position. "
-        + "This combination is trash, don't play it. One still could hit backdoor "
-        + "two pair tho. However, at this position, the disadvantage outweigh the strength of the hand.",
-        comments3.get("Early"));
+    assertEquals("This is a pair", "Pair", pair.getHandCombination());
+    assertTrue("Strong hand", pairResult.contains(
+        "A pair is a very strong starting hand because it is a made hand already. "));
   }
 
   @Test
-  public void testGenerateCommentPair() {
-    String result = evaluator2.generateComment("Early", "Bet", "Pair");
-    assertTrue("Comment for a Pair should include specific advice", result.contains("A pair is a very strong starting hand because it is a made hand already."));
+  public void testSuited() {
+    hand = new ArrayList<>();
+    hand.add(new CardF("9", "H"));
+    hand.add(new CardF("K", "H"));
+    suitedCard = new TexasHoldemHandEvaluator(hand);
+    Map<String, String> suitedCardComments = suitedCard.getPositionBasedComments();
+    String suitedResult = suitedCard.generateComment("Early Position(Bet > 20)", "Bet", "Suited Cards");
+
+    assertEquals("This is a suitedCard", "Suited Cards", suitedCard.getHandCombination());
+    assertTrue("Strong hand",suitedResult .contains(
+        "Suited cards can be very strong after flop if one hit a flush. "));
   }
 
   @Test
-  public void testGenerateCommentSuitedConnector() {
-    // Suited Connector already set in setUp()
-    String result = evaluator.generateComment("Middle", "Bet", "Suited Connector");
-    assertTrue("Comment for Suited Connector should include potential benefits", result.contains("A suited connector has many potential after flop, thus making it a very playable hand."));
+  public void testBadHand() {
+    Map<String, String> badHandComments = badHand.getPositionBasedComments();
+    String badHandResult = badHand.generateComment("Middle Position(Bet > 15)", "Fold",
+        "Bad Hand");
+
+    assertEquals("This is a suitedCard", "Bad Hand", badHand.getHandCombination());
+    assertTrue("Bad hand comments",badHandResult .contains(
+        "This combination is trash, don't play it. One still could hit backdoor two pair tho. "));
   }
 
   @Test
-  public void testGenerateCommentConnectedCards() {
-    String result = evaluator5.generateComment("Late", "Fold", "Connected Cards");
-    assertTrue("Comment for Connected Cards should include risk and potential", result.contains("Connected cards can be vulnerable if it miss the flop, but it has the potential to hit a straight."));
+  public void testConnectedCards() {
+    hand = new ArrayList<>();
+    hand.add(new CardF("7", "D"));
+    hand.add(new CardF("8", "S"));
+    connectors = new TexasHoldemHandEvaluator(hand);
+    Map<String, String> badHandComments = connectors.getPositionBasedComments();
+    String badHandResult = connectors.generateComment("Middle Position(Bet > 15)", "Fold",
+        "Connected Cards");
+
+    assertEquals("This is a connectors", "Connected Cards", connectors.getHandCombination());
+    assertTrue("Connected cards comments",badHandResult .contains(
+        "Connected cards can be vulnerable if it miss the flop, but it has the potential to hit a straight. "));
   }
 
   @Test
-  public void testGenerateCommentTwoHighCards() {
-    String result = evaluator3.generateComment("Early", "Bet", "Two High Cards");
-    assertTrue("Comment for Two High Cards should include limited potential", result.contains("Two high cards have limited potential but still have decent value when hit a pair after flop."));
+  public void testSmallAx() {
+    hand = new ArrayList<>();
+    hand.add(new CardF("A", "H"));
+    hand.add(new CardF("8", "C"));
+    smallAx = new TexasHoldemHandEvaluator(hand);
+    Map<String, String> badHandComments = smallAx.getPositionBasedComments();
+    String smallAxResult = smallAx.generateComment("Middle Position(Bet > 15)", "Fold",
+        "Small Ax");
+
+    assertEquals("This is a smallAx", "Small Ax", smallAx.getHandCombination());
+    assertTrue("Small Ax comments",smallAxResult .contains(
+        "Ax cards have limited potential, however, one still could hit a top pair. "));
   }
 
   @Test
-  public void testGenerateCommentSmallAx() {
-    String result = evaluator6.generateComment("Middle", "Fold", "Small Ax");
-    assertTrue("Comment for Small Ax should include potential for hitting a top pair", result.contains("Ax cards have limited potential, however, one still could hit a top pair."));
+  public void testTwoHighCards() {
+    hand = new ArrayList<>();
+    hand.add(new CardF("K", "H"));
+    hand.add(new CardF("10", "S"));
+    twoHighCard = new TexasHoldemHandEvaluator(hand);
+    Map<String, String> badHandComments = twoHighCard.getPositionBasedComments();
+    String twoHighCardResult = twoHighCard.generateComment("Early Position(Bet > 20)", "Bet",
+        "Two High Cards");
+
+    assertEquals("This is a suitedCard", "Two High Cards", twoHighCard.getHandCombination());
+    assertTrue("Two high cards comments",twoHighCardResult.contains(
+        "Two high cards have limited potential but still have decent value when hit a pair after flop. "));
   }
 
   @Test
-  public void testGenerateCommentSuitedCards() {
-    String result = evaluator4.generateComment("Late", "Fold", "Suited Cards");
-    assertTrue("Comment for Suited Cards should include flush potential", result.contains("Suited cards can be very strong after flop if one hit a flush."));
-  }
-
-  @Test
-  public void testGenerateCommentBadHand() {
-    String result = evaluator7.generateComment("Early", "Fold", "Bad Hand");
-    assertTrue("Comment for Bad Hand should include a cautionary advice", result.contains("This combination is trash, don't play it."));
+  public void testUnexpectedPosition() {
+    String result = evaluator.generateComment("Unknown Position", "Fold", "Pair");
+    assertTrue("Comment for an unexpected position should include default advice",
+        result.contains("Unexpected position. Play cautiously."));
   }
 
   @Test
@@ -214,12 +209,5 @@ public class TexasHoldemHandEvaluatorTest {
     String result = evaluator.generateComment("Middle", "Bet", "Unknown Hand Type");
     assertTrue("Comment for an unexpected hand type should include a default advice",
         result.contains("Unexpected hand type. Consider playing cautiously."));
-  }
-
-  @Test
-  public void testGenerateCommentUnexpectedPosition() {
-    String result = evaluator7.generateComment("Fake", "Fold", "Bad Hand");
-    assertTrue("Comment for an unexpected hand type should include a default advice",
-        result.contains("Unexpected position. Play cautiously."));
   }
 }

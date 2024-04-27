@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -6,7 +5,9 @@ import java.util.Map;
 /**
  * Represents a poker hand consisting of two cards in Texas Hold'em.
  * This class ensures the hand is properly initialized with two non-null cards
- * and uses an evaluator to assess the hand's score and combination.
+ * and uses an evaluator to assess the hand's score and combination. It implements
+ * the {@code IHand} interface, providing methods to get scores, combinations,
+ * positional decisions, and detailed descriptions of the hand.
  */
 public abstract class HandF implements IHand {
   private CardF firstCard;
@@ -14,8 +15,9 @@ public abstract class HandF implements IHand {
   private TexasHoldemHandEvaluator evaluator;  // Reference to the evaluator
 
   /**
-   * Constructs a HandF object with two cards.
-   * Initializes an evaluator for these cards.
+   * Constructs a {@code HandF} object with two cards.
+   * This constructor initializes the hand with specified cards and sets up an evaluator
+   * to assess the properties of the hand such as score and combination.
    *
    * @param firstCard The first card of the hand; must not be null.
    * @param secondCard The second card of the hand; must not be null.
@@ -54,20 +56,34 @@ public abstract class HandF implements IHand {
     return evaluator.getHandCombination();
   }
 
+  /**
+   * Provides strategic decisions based on the position at the table and the hand's score.
+   * This method utilizes the evaluator to decide the best course of action for a given hand.
+   *
+   * @return a map of decision recommendations based on the hand's score.
+   */
   @Override
   public Map<String, String> getHandPositionDecisions(){
     int score = getHandScore();
     return evaluator.getPositionDecisions(score);
   }
 
+  /**
+   * Provides comments based on the position at the table and the hand's evaluation.
+   * These comments are useful for strategic insights and understanding hand strength in various scenarios.
+   *
+   * @return a map of position-based comments.
+   */
   @Override
-  public Map<String, String> getHandPositionBasedComments(){return evaluator.getPositionBasedComments(); }
+  public Map<String, String> getHandPositionBasedComments(){
+    return evaluator.getPositionBasedComments();
+  }
 
   /**
    * Provides a full description of the hand including the details of each card,
    * the total hand score, and the hand combination.
    *
-   * @return a string describing the hand in detail.
+   * @return a string describing the hand in detail, encompassing card details, total score, and combination.
    */
   @Override
   public String describeHand() {
