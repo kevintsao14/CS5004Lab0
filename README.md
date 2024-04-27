@@ -19,7 +19,9 @@ a game.
 
 ## Installation
 
-Currently, the application is designed to run in a console environment. To get started, clone this repository and compile the source files using your preferred Java compiler.
+To set up the application, clone this repository and compile the Java files.
+
+
 
 ## Usage
 
